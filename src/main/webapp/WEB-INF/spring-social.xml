@@ -1,0 +1,62 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="connectionFactoryRegistry"
+		class="org.springframework.social.connect.support.ConnectionFactoryRegistry">
+		<property name="connectionFactories">
+			<list>
+				<bean
+					class="org.springframework.social.facebook.connect.FacebookConnectionFactory">
+					<constructor-arg value="${app.config.oauth.facebook.apikey}" />
+					<constructor-arg value="${app.config.oauth.facebook.apisecret}" />
+				</bean>
+
+				<bean
+					class="org.springframework.social.twitter.connect.TwitterConnectionFactory">
+					<constructor-arg value="${app.config.oauth.twitter.apikey}" />
+					<constructor-arg value="${app.config.oauth.twitter.apisecret}" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="facebookServiceProvider" class="com.test.service.OAuthServiceProvider">
+		<constructor-arg name="config" ref="facebookServiceConfig" />
+	</bean>
+
+	<bean id="facebookServiceConfig" class="com.test.service.OAuthServiceConfig">
+		<constructor-arg value="${app.config.oauth.facebook.apikey}" />
+		<constructor-arg value="${app.config.oauth.facebook.apisecret}" />
+		<constructor-arg value="${app.config.oauth.facebook.callback}" />
+		<constructor-arg value="org.scribe.builder.api.FacebookApi" />
+	</bean>
+
+	<bean id="oAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+		<constructor-arg>
+			<map>
+				<entry key="redirect_uri" value="${app.config.oauth.facebook.callback}"></entry>
+				<entry key="scope" value="${app.config.oauth.facebook.scope}"></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="oAuth1Parameters" class="org.springframework.social.oauth1.OAuth1Parameters">
+		<constructor-arg>
+			<map>
+				<entry key="consumerKey" value="${app.config.oauth.twitter.apikey}"></entry>
+				<entry key="consumerSecret" value="${app.config.oauth.twitter.apisecret}"></entry>
+				<entry key="accessToken" value="${app.config.oauth.twitter.accessToken}"></entry>
+				<entry key="accessTokenSecret" value="${app.config.oauth.twitter.accessTokenSecret}"></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+</beans>
